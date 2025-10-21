@@ -7,6 +7,7 @@ import '../../data/models/client.dart';
 
 class ClientsScreen extends StatelessWidget {
   const ClientsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -23,11 +24,13 @@ class ClientsScreen extends StatelessWidget {
               context.read<ClientController>().add(v);
               final m = ScaffoldMessenger.of(context);
               m.clearSnackBars();
-              m.showSnackBar(const SnackBar(content: Text('Cliente agregado correctamente')));
+              m.showSnackBar(
+                const SnackBar(content: Text('Cliente agregado correctamente')),
+              );
             }
           },
           icon: const Icon(Icons.add),
-        )
+        ),
       ],
       body: Column(
         children: [
@@ -44,7 +47,8 @@ class ClientsScreen extends StatelessWidget {
                   return ListTile(
                     leading: const Icon(Icons.person),
                     title: Text('${v.nombre} ${v.apellido}'),
-                    subtitle: Text('DOC: ${v.documento} • ID: ${v.idCliente}'),
+                    subtitle:
+                        Text('DOC: ${v.documento} • ID: ${v.idCliente}'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -60,17 +64,26 @@ class ClientsScreen extends StatelessWidget {
                               context.read<ClientController>().update(edited);
                               final m = ScaffoldMessenger.of(context);
                               m.clearSnackBars();
-                              m.showSnackBar(const SnackBar(content: Text('Cliente actualizado correctamente')));
+                              m.showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text('Cliente actualizado correctamente')),
+                              );
                             }
                           },
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () {
-                            context.read<ClientController>().remove(v.idCliente);
+                            context
+                                .read<ClientController>()
+                                .remove(v.idCliente);
                             final m = ScaffoldMessenger.of(context);
                             m.clearSnackBars();
-                            m.showSnackBar(const SnackBar(content: Text('Cliente eliminado')));
+                            m.showSnackBar(
+                              const SnackBar(
+                                  content: Text('Cliente eliminado')),
+                            );
                           },
                         ),
                       ],
@@ -81,6 +94,26 @@ class ClientsScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+
+      // 👉 FAB para agregar cliente
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final v = await showDialog<Client>(
+            context: context,
+            builder: (_) => const _ClientDialog(),
+          );
+          if (!context.mounted) return;
+          if (v != null) {
+            context.read<ClientController>().add(v);
+            final m = ScaffoldMessenger.of(context);
+            m.clearSnackBars();
+            m.showSnackBar(
+              const SnackBar(content: Text('Cliente agregado correctamente')),
+            );
+          }
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -116,32 +149,44 @@ class _ClientDialogState extends State<_ClientDialog> {
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: Column(children: [
-            TextFormField(
-              controller: idCtrl,
-              decoration: const InputDecoration(labelText: 'ID cliente'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'ID requerido' : null,
-            ),
-            TextFormField(
-              controller: nombreCtrl,
-              decoration: const InputDecoration(labelText: 'Nombre'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Nombre requerido' : null,
-            ),
-            TextFormField(
-              controller: apellidoCtrl,
-              decoration: const InputDecoration(labelText: 'Apellido'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Apellido requerido' : null,
-            ),
-            TextFormField(
-              controller: docCtrl,
-              decoration: const InputDecoration(labelText: 'Documento'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Documento requerido' : null,
-            ),
-          ]),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: idCtrl,
+                decoration: const InputDecoration(labelText: 'ID cliente'),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'ID requerido' : null,
+              ),
+              TextFormField(
+                controller: nombreCtrl,
+                decoration: const InputDecoration(labelText: 'Nombre'),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Nombre requerido' : null,
+              ),
+              TextFormField(
+                controller: apellidoCtrl,
+                decoration: const InputDecoration(labelText: 'Apellido'),
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Apellido requerido'
+                    : null,
+              ),
+              TextFormField(
+                controller: docCtrl,
+                decoration:
+                    const InputDecoration(labelText: 'Documento o CI'),
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Documento requerido'
+                    : null,
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             if (!_formKey.currentState!.validate()) return;
@@ -154,7 +199,7 @@ class _ClientDialogState extends State<_ClientDialog> {
             Navigator.pop(context, v);
           },
           child: const Text('Guardar'),
-        )
+        ),
       ],
     );
   }

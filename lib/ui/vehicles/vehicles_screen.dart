@@ -7,6 +7,7 @@ import '../../data/models/vehicle.dart';
 
 class VehiclesScreen extends StatelessWidget {
   const VehiclesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -91,6 +92,25 @@ class VehiclesScreen extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final v = await showDialog<Vehicle>(
+            context: context,
+            builder: (_) => const _VehicleDialog(),
+          );
+          if (!context.mounted) return;
+          if (v != null) {
+            context.read<VehicleController>().add(v);
+            final messenger = ScaffoldMessenger.of(context);
+            messenger.clearSnackBars();
+            messenger.showSnackBar(
+              const SnackBar(content: Text('Vehículo agregado correctamente')),
+            );
+          }
+        },
+        tooltip: 'Registrar vehículo',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
@@ -98,6 +118,7 @@ class VehiclesScreen extends StatelessWidget {
 class _VehicleDialog extends StatefulWidget {
   final Vehicle? edit;
   const _VehicleDialog({this.edit});
+
   @override
   State<_VehicleDialog> createState() => _VehicleDialogState();
 }
@@ -127,39 +148,41 @@ class _VehicleDialogState extends State<_VehicleDialog> {
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: Column(children: [
-            TextFormField(
-              controller: idCtrl,
-              decoration: const InputDecoration(labelText: 'ID vehículo'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'ID requerido' : null,
-            ),
-            TextFormField(
-              controller: marcaCtrl,
-              decoration: const InputDecoration(labelText: 'Marca'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Marca requerida' : null,
-            ),
-            TextFormField(
-              controller: modeloCtrl,
-              decoration: const InputDecoration(labelText: 'Modelo'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Modelo requerido' : null,
-            ),
-            TextFormField(
-              controller: anioCtrl,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Año'),
-              validator: (v) {
-                final n = int.tryParse(v ?? '');
-                if (n == null) return 'Año numérico';
-                if (n < 1980 || n > DateTime.now().year + 1) return 'Año fuera de rango';
-                return null;
-              },
-            ),
-            SwitchListTile(
-              title: const Text('Disponible'),
-              value: disponible,
-              onChanged: (val) => setState(() => disponible = val),
-            ),
-          ]),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: idCtrl,
+                decoration: const InputDecoration(labelText: 'ID vehículo'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'ID requerido' : null,
+              ),
+              TextFormField(
+                controller: marcaCtrl,
+                decoration: const InputDecoration(labelText: 'Marca'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Marca requerida' : null,
+              ),
+              TextFormField(
+                controller: modeloCtrl,
+                decoration: const InputDecoration(labelText: 'Modelo'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Modelo requerido' : null,
+              ),
+              TextFormField(
+                controller: anioCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Año'),
+                validator: (v) {
+                  final n = int.tryParse(v ?? '');
+                  if (n == null) return 'Año numérico';
+                  if (n < 1980 || n > DateTime.now().year + 1) return 'Año fuera de rango';
+                  return null;
+                },
+              ),
+              SwitchListTile(
+                title: const Text('Disponible'),
+                value: disponible,
+                onChanged: (val) => setState(() => disponible = val),
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -177,7 +200,7 @@ class _VehicleDialogState extends State<_VehicleDialog> {
             Navigator.pop(context, v);
           },
           child: const Text('Guardar'),
-        )
+        ),
       ],
     );
   }
