@@ -12,6 +12,37 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.2.3
   intl: ^0.19.0
+  
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  adaptive_icon_background: "#F7F7FB"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
+
+
+flutter_native_splash:
+  color: "#F7F7FB"
+  image: assets/splash/splash_logo.png
+
+  # Opciones para control del tamaño y posición
+  android: true
+  ios: true
+  web: true
+
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
+  web_image_mode: contain
+
+  android_12:
+    image: assets/splash/splash_logo.png
+    color: "#F7F7FB"
+
+
+
 
 dev_dependencies:
   flutter_test:
