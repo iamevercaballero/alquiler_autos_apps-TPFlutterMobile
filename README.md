@@ -27,11 +27,26 @@ flutter run
 ```
 
 ## Estructura
-- `lib/core` navegación y widgets comunes
-- `lib/data` modelos, repositorios y persistencia opcional (SharedPreferences)
-- `lib/state` controladores (Provider + ChangeNotifier)
-- `lib/ui` pantallas
+lib/
+ ├─ core/                 # Navegación, temas y widgets base
+ ├─ data/                 # Modelos y repositorios en memoria
+ ├─ state/                # Controladores con Provider
+ ├─ ui/                   # Pantallas y componentes visuales
+ │   ├─ vehicles/         # CRUD de Vehículos
+ │   ├─ clients/          # CRUD de Clientes
+ │   ├─ reservations/     # Gestión de Reservas
+ │   └─ deliveries/       # Registro de Entregas
+ └─ main.dart             # Punto de entrada
+
 
 ## Datos de ejemplo
 Se cargan automáticamente en `main.dart` (vehículos, clientes y una reserva activa).
 
+## Ejecución del proyecto
+--Modo desarrollo (debug)
+flutter run -d chrome
+## Generación de APK
+--Debug APK
+flutter build apk --debug
+Instalar en dispositivo físico (Android-Studio):
+adb install -r build/app/outputs/flutter-apk/app-debug.apk
